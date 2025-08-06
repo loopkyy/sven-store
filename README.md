@@ -1,68 +1,103 @@
-# CodeIgniter 4 Application Starter
+🌟 Lunaya Store — CodeIgniter 4 + React
+✨ Overview
+Lunaya Store is a modern e-commerce web application built using:
 
-## What is CodeIgniter?
+🔧 CodeIgniter 4 (PHP) — as backend framework (API + admin panel)
 
-CodeIgniter is a PHP full-stack web framework that is light, fast, flexible and secure.
-More information can be found at the [official site](https://codeigniter.com).
+⚛️ React — as frontend for customers (/frontend-react)
 
-This repository holds a composer-installable app starter.
-It has been built from the
-[development repository](https://github.com/codeigniter4/CodeIgniter4).
+🎨 Chakra UI on frontend, Sneat Admin template on backend
 
-More information about the plans for version 4 can be found in [CodeIgniter 4](https://forum.codeigniter.com/forumdisplay.php?fid=28) on the forums.
+📦 Packaged with Composer, using .env for configuration
 
-You can read the [user guide](https://codeigniter.com/user_guide/)
-corresponding to the latest version of the framework.
+This repository is a monorepo to manage both backend and frontend in one place.
 
-## Installation & updates
+🚀 Installation & Setup
+Backend (CodeIgniter 4)
+bash
+Copy
+Edit
+# Clone the repo
+git clone https://github.com/kamu-user/lunaya-store.git
+cd lunaya-store
 
-`composer create-project codeigniter4/appstarter` then `composer update` whenever
-there is a new release of the framework.
+# Install dependencies
+composer install
 
-When updating, check the release notes to see if there are any changes you might need to apply
-to your `app` folder. The affected files can be copied or merged from
-`vendor/codeigniter4/framework/app`.
+# Copy .env file
+cp env .env
 
-## Setup
+# Setup .env
+# (Edit app.baseURL, database settings, etc.)
 
-Copy `env` to `.env` and tailor for your app, specifically the baseURL
-and any database settings.
+# Migrate the database
+php spark migrate
 
-## Important Change with index.php
+# Serve the project
+php spark serve
+Frontend (React)
+bash
+Copy
+Edit
+# Navigate to frontend folder
+cd frontend-react
 
-`index.php` is no longer in the root of the project! It has been moved inside the *public* folder,
-for better security and separation of components.
+# Install React dependencies
+npm install
 
-This means that you should configure your web server to "point" to your project's *public* folder, and
-not to the project root. A better practice would be to configure a virtual host to point there. A poor practice would be to point your web server to the project root and expect to enter *public/...*, as the rest of your logic and the
-framework are exposed.
+# Start the React dev server
+npm run dev
+⚠️ Make sure your API endpoints in React are correctly pointing to your backend baseURL.
 
-**Please** read the user guide for a better explanation of how CI4 works!
+📁 Project Structure
+pgsql
+Copy
+Edit
+lunaya-store/
+├── app/                 → CodeIgniter 4 backend
+├── public/              → Public folder (index.php)
+├── frontend-react/      → React frontend app
+├── writable/            → CI4 writable folder
+├── .env                 → Environment settings
+├── composer.json        → PHP dependencies
+└── README.md
+🌐 Deployment Notes
+Point your web server (Apache/Nginx) to the public/ directory.
 
-## Repository Management
+Use a separate domain or subdomain for frontend (e.g., store.example.com).
 
-We use GitHub issues, in our main repository, to track **BUGS** and to track approved **DEVELOPMENT** work packages.
-We use our [forum](http://forum.codeigniter.com) to provide SUPPORT and to discuss
-FEATURE REQUESTS.
+Build frontend for production:
 
-This repository is a "distribution" one, built by our release preparation script.
-Problems with it can be raised on our forum, or as issues in the main repository.
+bash
+Copy
+Edit
+npm run build
+Always commit your .env.example, never your real .env.
 
-## Server Requirements
+🧑‍💻 Developer Notes
+Uses RESTful API between frontend and backend.
 
-PHP version 8.1 or higher is required, with the following extensions installed:
+Authentication via session or token-based (custom implementation).
 
-- [intl](http://php.net/manual/en/intl.requirements.php)
-- [mbstring](http://php.net/manual/en/mbstring.installation.php)
+Wishlist & cart functionality uses localStorage/sessionStorage on frontend.
 
-> [!WARNING]
-> - The end of life date for PHP 7.4 was November 28, 2022.
-> - The end of life date for PHP 8.0 was November 26, 2023.
-> - If you are still using PHP 7.4 or 8.0, you should upgrade immediately.
-> - The end of life date for PHP 8.1 will be December 31, 2025.
+🔧 Requirements
+PHP 8.1+
 
-Additionally, make sure that the following extensions are enabled in your PHP:
+Composer
 
-- json (enabled by default - don't turn it off)
-- [mysqlnd](http://php.net/manual/en/mysqlnd.install.php) if you plan to use MySQL
-- [libcurl](http://php.net/manual/en/curl.requirements.php) if you plan to use the HTTP\CURLRequest library
+Node.js & npm
+
+MySQL or compatible database
+
+Apache/Nginx for production
+
+📚 Resources
+CodeIgniter Docs
+
+React Docs
+
+Chakra UI
+
+Sneat Template
+
