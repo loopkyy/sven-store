@@ -155,53 +155,97 @@ if (str_contains($host, 'admin-lunaya.test')) {
     });
 }
 
-// ========================
-// FRONTEND
-// ========================
 else {
-    $routes->setDefaultNamespace('App\Controllers\Frontend');
-    $routes->setDefaultController('Home');
+    // DEFAULT NAMESPACE UNTUK FRONTEND/API
+    $routes->setDefaultNamespace('App\Controllers');
+    $routes->setDefaultController('Home'); // WAJIB diisi
     $routes->setDefaultMethod('index');
-
- $routes->group('', ['namespace' => 'App\Controllers\Frontend'], function ($routes) {
-    // Home
-    $routes->get('/', 'Home::index');
-
-    // Produk
-$routes->get('produk', 'ProductController::index');
-$routes->get('produk/kategori/(:segment)', 'ProductController::category/$1');
-$routes->get('produk/(:segment)', 'ProductController::detail/$1');            
-
-    // Wishlist
-    $routes->get('wishlist', 'WishlistController::index');
-    $routes->get('wishlist/add/(:num)', 'WishlistController::add/$1');
-    $routes->get('wishlist/remove/(:num)', 'WishlistController::remove/$1');
-
-    // Cart
-$routes->get('cart', 'CartController::index');
-$routes->get('cart/add/(:segment)', 'CartController::add/$1');
-$routes->post('cart/add', 'CartController::add'); // ✅ Ini aja cukup
-
-$routes->get('cart/remove/(:segment)', 'CartController::remove/$1');
-$routes->post('cart/update-quantity/(:segment)', 'CartController::updateQuantity/$1');
-$routes->get('cart/clear', 'CartController::clear');
-
-$routes->get('/akun', 'AccountController::index', ['filter' => 'auth']);
-
-$routes->post('newsletter/subscribe', 'NewsletterController::subscribe');
-
-$routes->get('login', 'AuthController::showLogin');
-    $routes->post('login', 'AuthController::login');
-    $routes->get('register', 'AuthController::showRegister');
-    $routes->post('register', 'AuthController::register');
-    $routes->get('logout', 'AuthController::logout');
-$routes->post('checkout/direct', 'CheckoutController::direct');
-    $routes->get('checkout', 'CheckoutController::index', ['filter' => 'auth']);
-    $routes->post('checkout/process', 'CheckoutController::process', ['filter' => 'auth']);
+    $routes->options('(:any)', function() {
+    return service('response')->setStatusCode(200);
 });
 
+  $routes->group('api', ['namespace' => 'App\Controllers\Api'], function ($routes) {
+    // Produk
+    $routes->get('products', 'ProductApi::index');
+    $routes->get('products/slug/(:segment)', 'ProductApi::getBySlug/$1');
+    $routes->get('products/category/(:segment)', 'ProductApi::category/$1');
+    $routes->get('products/best-seller', 'ProductApi::bestSeller');
+
+    // Cart
+$routes->get('cart', 'CartApi::index');
+$routes->post('cart/add', 'CartApi::add');
+$routes->post('cart/update', 'CartApi::update');
+$routes->get('cart/clear', 'CartApi::clear');
+$routes->get('cart/count', 'CartApi::count');
+$routes->post('cart/remove', 'CartApi::removePost');
+
+
+
+    // Checkout
+    $routes->post('checkout', 'CheckoutApi::process');
+
+    // wishlist
+$routes->get('wishlist', 'WishlistApi::index');
+$routes->post('wishlist/add', 'WishlistApi::add');
+$routes->post('wishlist/remove', 'WishlistApi::remove');
+$routes->get('wishlist/clear', 'WishlistApi::clear');
+$routes->get('wishlist/count', 'WishlistApi::count');
+
+    // Auth
+    $routes->post('auth/register', 'AuthApi::register');
+    $routes->post('auth/login', 'AuthApi::login');
+    $routes->post('auth/logout', 'AuthApi::logout');
+
+    // Account
+    $routes->get('account', 'AccountApi::profile');
+    $routes->put('account/update', 'AccountApi::updateProfile');
+    $routes->put('account/change-password', 'AccountApi::changePassword');
+    $routes->post('account/avatar', 'AccountApi::uploadAvatar');
+
+    //Orders
+      $routes->get('orders/history', 'OrderApi::history');
+
+    // riviw
+    $routes->get('reviews/(:num)', 'ProductReviewApi::index/$1');
+    $routes->post('reviews', 'ProductReviewApi::create');
+    $routes->get('products/top-rated', 'ProductReviewApi::topRated'); 
+
+    
+    //shping
+    $routes->get('shippings', 'ShippingApi::index');
+
+    //copon
+    $routes->post('coupon/validate', 'CouponApi::validateCoupon');
+    $routes->get('coupon/active', 'CouponApi::activeCoupons');
+
+
+    //category
+$routes->get('categories', 'CategoryApi::index');
+$routes->get('categories/slug/(:segment)', 'CategoryApi::slug/$1'); 
+$routes->get('categories/(:segment)', 'CategoryApi::show/$1');
+
+
+});
+
+
+
+    // FRONTEND - Serve HTML dari `public/assets/frontend/`
+    $routes->get('/', function () {
+        return file_get_contents(FCPATH . 'assets/frontend/index.html');
+    });
+
+    $routes->get('produk', function () {
+        return file_get_contents(FCPATH . 'assets/frontend/produk.html');
+    });
+
+    $routes->get('produk/(:segment)', function () {
+        return file_get_contents(FCPATH . 'assets/frontend/detail.html');
+    });
 }
 
+// ===============================
+// 3️⃣ ENV-SPECIFIC ROUTING
+// ===============================
 if (file_exists(APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php')) {
     require APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php';
 }

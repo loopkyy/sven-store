@@ -54,7 +54,7 @@ class ProductController extends BaseController
         'price'       => $price,
         'stock'       => (int) $this->request->getPost('stock'),
         'category_id' => $this->request->getPost('category_id'),
-        'rating'      => $this->request->getPost('rating'),
+
         'image'       => $imageName
     ]);
 

@@ -79,11 +79,7 @@
   <?php endif ?>
 </td>
 
-<td>
-  <?php for ($i = 1; $i <= 5; $i++): ?>
-    <i class="bi <?= $i <= $produk['rating'] ? 'bi-star-fill text-warning' : 'bi-star text-muted' ?>"></i>
-  <?php endfor ?>
-</td>
+
 
           </tr>
         <?php endforeach ?>

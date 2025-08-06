@@ -1,13 +1,15 @@
 <?php
 
-namespace App\Controllers\Frontend;
+namespace App\Controllers\Api;
 
-use App\Controllers\BaseController;
+use CodeIgniter\RESTful\ResourceController;
 use App\Models\ProductModel;
 use App\Models\CategoryModel;
 
-class ProductController extends BaseController
+class ProductApi extends ResourceController
 {
+    protected $format = 'json';
+
     public function index()
     {
         $productModel  = new ProductModel();
@@ -15,7 +17,6 @@ class ProductController extends BaseController
 
         $category = $this->request->getGet('category');
         $sort     = $this->request->getGet('sort');
-        $view     = $this->request->getGet('view');
 
         $productModel->where('is_active', 1);
 
@@ -28,31 +29,58 @@ class ProductController extends BaseController
         } elseif ($sort === 'price_desc') {
             $productModel->orderBy('price', 'DESC');
         } elseif ($sort === 'popular') {
-            $productModel->orderBy('sold', 'DESC'); // jika kolom sold ada
+            $productModel->orderBy('sold', 'DESC');
         }
 
         $products = $productModel->paginate(10, 'product');
         $pager    = $productModel->pager;
 
-        return view('Frontend/Product/index', [
-            'products'          => $products,
-            'categories'        => $categoryModel->findAll(),
-            'selected_category' => $category,
-            'selected_sort'     => $sort,
-            'selected_view'     => $view ?: 'grid',
-            'pager'             => $pager
+        return $this->respond([
+            'products'   => $products,
+            'pager'      => [
+                'currentPage' => $pager->getCurrentPage('product'),
+                'totalPages'  => $pager->getPageCount('product'),
+                'hasNext'     => $pager->hasNextPage('product'),
+                'hasPrev'     => $pager->hasPreviousPage('product'),
+            ]
         ]);
     }
 
-    public function category($categorySlug)
+    public function getBySlug($slug)
     {
-        $productModel  = new ProductModel();
-        $categoryModel = new CategoryModel();
+        $productModel = new ProductModel();
 
-        // Cari kategori berdasarkan slug
-        $category = $categoryModel->where('slug', $categorySlug)->first();
+        $product = $productModel
+            ->select('products.*, categories.name as category_name')
+            ->join('categories', 'categories.id = products.category_id', 'left')
+            ->where('products.slug', $slug)
+            ->first();
+
+        if (!$product) {
+            return $this->failNotFound("Produk tidak ditemukan.");
+        }
+
+        $relatedProducts = (new ProductModel())
+            ->where('category_id', $product['category_id'])
+            ->where('id !=', $product['id'])
+            ->where('is_active', 1)
+            ->limit(4)
+            ->find();
+
+        return $this->respond([
+            'product' => $product,
+            'relatedProducts' => $relatedProducts
+        ]);
+    }
+
+    public function category($slug)
+    {
+        $categoryModel = new CategoryModel();
+        $productModel  = new ProductModel();
+
+        $category = $categoryModel->where('slug', $slug)->first();
         if (!$category) {
-            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+            return $this->failNotFound("Kategori tidak ditemukan.");
         }
 
         $products = $productModel
@@ -62,51 +90,27 @@ class ProductController extends BaseController
 
         $pager = $productModel->pager;
 
-        return view('Frontend/Product/category', [
-            'products' => $products,
+        return $this->respond([
             'category' => $category,
-            'pager'    => $pager
+            'products' => $products,
+            'pager'    => [
+                'currentPage' => $pager->getCurrentPage('product'),
+                'totalPages'  => $pager->getPageCount('product'),
+            ]
         ]);
     }
 
-public function detail($slug)
-{
-    $productModel = new ProductModel();
-
-    $product = $productModel
-        ->select('products.*, categories.name as category_name')
-        ->join('categories', 'categories.id = products.category_id', 'left')
-        ->where('products.slug', $slug)
-        ->first();
-
-    if (!$product) {
-        throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
-    }
-
-    // Jangan pakai $productModel lagi, bikin baru
-    $relatedProducts = (new ProductModel())
-        ->where('category_id', $product['category_id'])
-        ->where('id !=', $product['id'])
-        ->where('is_active', 1)
-        ->limit(4)
-        ->find();
-
-    return view('Frontend/Product/detail', [
-        'product'         => $product,
-        'relatedProducts' => $relatedProducts
-    ]);
-}
-
     public function bestSeller()
-{
-    $productModel = new ProductModel();
+    {
+        $productModel = new ProductModel();
 
-    $products = $productModel
-        ->where('is_best_seller', 1)
-        ->where('is_active', 1)
-        ->findAll(4); // ambil 4 produk saja
+        $products = $productModel
+            ->where('is_best_seller', 1)
+            ->where('is_active', 1)
+            ->findAll(4);
 
-    return $products;
-}
-
+        return $this->respond([
+            'products' => $products
+        ]);
+    }
 }

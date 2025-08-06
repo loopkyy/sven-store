@@ -40,15 +40,6 @@
           <?php endforeach; ?>
         </select>
       </div>
-<div class="mb-3">
-  <label for="rating" class="form-label">Rating</label>
-  <select name="rating" class="form-select" required>
-    <option value="">Pilih Rating</option>
-    <?php for ($i = 1; $i <= 5; $i++): ?>
-      <option value="<?= $i ?>" <?= (old('rating', $produk['rating'] ?? '') == $i) ? 'selected' : '' ?>><?= $i ?> ⭐</option>
-    <?php endfor ?>
-  </select>
-</div>
 
       <div class="mb-3">
         <label for="image" class="form-label fw-bold">Gambar Produk</label>

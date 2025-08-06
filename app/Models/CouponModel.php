@@ -6,8 +6,11 @@ use CodeIgniter\Model;
 
 class CouponModel extends Model
 {
-    protected $table = 'coupons';
+    protected $table      = 'coupons';
     protected $primaryKey = 'id';
-    protected $allowedFields = ['code', 'type', 'value', 'max_uses', 'used_count', 'start_date', 'end_date', 'is_active', 'created_at', 'updated_at'];
-    protected $useTimestamps = true;
+    protected $allowedFields = [
+        'code', 'type', 'value', 'max_uses', 'used_count',
+        'min_order', 'max_discount', 'start_date', 'end_date',
+        'is_active', 'created_at', 'updated_at'
+    ];
 }

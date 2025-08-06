@@ -1,9 +1,3 @@
-.hover-stroke {
-  transition: border-color 0.3s;
-}
-.hover-stroke:hover {
-  border-color: red;
-}
 
 
 .circle-icon {

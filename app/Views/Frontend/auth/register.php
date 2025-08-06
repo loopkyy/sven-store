@@ -19,13 +19,12 @@
       <label for="username" class="form-label">Nama Pengguna</label>
       <input type="text" name="username" class="form-control" value="<?= old('username') ?>" required>
     </div>
-    <!-- No HP -->
 <div class="mb-3">
   <label for="phone" class="form-label">No HP</label>
   <input type="text" class="form-control" id="phone" name="phone" required>
 </div>
 
-<!-- Alamat -->
+
 <div class="mb-3">
   <label for="address" class="form-label">Alamat</label>
   <textarea class="form-control" id="address" name="address" rows="3" required></textarea>

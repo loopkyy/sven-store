@@ -124,3 +124,7 @@ _modules/*
 
 /results/
 /phpunit*.xml
+# React (Frontend)
+node_modules/
+.env.local
+

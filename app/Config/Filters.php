@@ -3,7 +3,7 @@
 namespace Config;
 
 use CodeIgniter\Config\Filters as BaseFilters;
-use CodeIgniter\Filters\Cors;
+use App\Filters\Cors;
 use CodeIgniter\Filters\CSRF;
 use CodeIgniter\Filters\DebugToolbar;
 use CodeIgniter\Filters\ForceHTTPS;
@@ -30,14 +30,15 @@ public array $aliases = [
     'honeypot'      => Honeypot::class,
     'invalidchars'  => InvalidChars::class,
     'secureheaders' => SecureHeaders::class,
-    'cors'          => Cors::class,
     'forcehttps'    => ForceHTTPS::class,
     'pagecache'     => PageCache::class,
     'performance'   => PerformanceMetrics::class,
     'maintenance'   => \App\Filters\MaintenanceFilter::class,
     'role'          => \App\Filters\RoleFilter::class,
-    'auth'          => \App\Filters\AuthFilter::class, // ← ini kamu tambahkan
+    'auth'          => \App\Filters\AuthFilter::class,
+    'cors'          => \App\Filters\Cors::class,
 ];
+
 
 
     /**
@@ -73,6 +74,7 @@ public array $aliases = [
      */
     public array $globals = [
         'before' => [
+            'cors',
             'maintenance',
             // 'honeypot',
             // 'csrf',
