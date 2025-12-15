@@ -21,7 +21,7 @@ const MotionImage = motion(Image);
 const heroSlides = [
   {
     image: 'https://images.unsplash.com/photo-1521334884684-d80222895322?ixlib=rb-4.0.3&auto=format&fit=crop&w=1400&q=80',
-    title: 'Selamat Datang di Lunaya Store',
+    title: 'Selamat Datang di Sven Store',
     description: 'Temukan fashion favoritmu dengan gaya kekinian!',
   },
   {

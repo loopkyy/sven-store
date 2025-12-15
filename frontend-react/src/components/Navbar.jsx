@@ -1,4 +1,4 @@
-// ...imports tetap
+
 import {
   Box,
   Flex,
@@ -74,7 +74,7 @@ export default function Navbar() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8080/api/account") // ← sudah diperbaiki di sini
+      .get("http://localhost:8080/api/account")
       .then((res) => {
         if (res.data.status) setUser(res.data.user);
       })
@@ -111,7 +111,7 @@ export default function Navbar() {
       >
         <HStack spacing={4}>
           <Text fontSize="2xl" fontWeight="bold" color="pink.500" pr={2}>
-            Lunaya Store
+            Sven Store
           </Text>
 
           {!isMobile && (
