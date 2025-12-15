@@ -111,7 +111,7 @@ export default function Navbar() {
       >
         <HStack spacing={4}>
           <Text fontSize="2xl" fontWeight="bold" color="pink.500" pr={2}>
-            Sven Store
+            Lunaya Store
           </Text>
 
           {!isMobile && (
